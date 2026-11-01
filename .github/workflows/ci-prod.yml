@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://${{ secrets.AZURE_WEBAPP_NAME_PROD }}.azurewebsites.net/swagger-ui.html
+      url: ${{ steps.deploy.outputs.webapp-url }}/swagger-ui.html
     steps:
       - uses: azure/login@v2
         with:
@@ -68,6 +68,7 @@ jobs:
                 JWT_SECRET_BASE64="${{ secrets.JWT_SECRET_PROD }}" \
                 SEGUNDA_MANO_URL="${{ secrets.SEGUNDA_MANO_URL_PROD }}"
       - uses: azure/webapps-deploy@v3
+        id: deploy
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME_PROD }}
           images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}

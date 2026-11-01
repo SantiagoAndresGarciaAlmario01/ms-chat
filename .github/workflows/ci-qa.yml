@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: qa
-      url: https://${{ secrets.AZURE_WEBAPP_NAME_QA }}.azurewebsites.net/swagger-ui.html
+      url: ${{ steps.deploy.outputs.webapp-url }}/swagger-ui.html
     steps:
       - uses: azure/login@v2
         with:
@@ -91,6 +91,7 @@ jobs:
                 SEGUNDA_MANO_URL="${{ secrets.SEGUNDA_MANO_URL_QA }}"
 
       - uses: azure/webapps-deploy@v3
+        id: deploy
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME_QA }}
           images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:qa-${{ github.sha }}
